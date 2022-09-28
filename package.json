@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "dev": "cross-env NODE_ENV=development webpack serve"
+    "dev": "cross-env NODE_ENV=development webpack serve",
+    "start": "node server/server.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   "homepage": "https://github.com/mcphail-alex/Solo-project#readme",
   "dependencies": {
     "cross-env": "^7.0.3",
+    "express": "^4.18.1",
     "html-webpack-plugin": "^5.5.0",
     "node": "^18.9.1",
     "node-fetch": "^3.2.10",

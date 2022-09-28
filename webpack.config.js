@@ -5,7 +5,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-        main: path.resolve(__dirname, './src/index.js'),
+        main: path.resolve(__dirname, './client/src/index.js'),
     },
     output: {
         path: path.resolve(__dirname, './build'),
@@ -62,7 +62,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             title: 'webpack Boilerplate',
-            template: path.resolve(__dirname, './src/template.html'), // template file
+            template: path.resolve(__dirname, './client/template.html'), // template file
             filename: 'index.html', // output file
         }),
         new CleanWebpackPlugin(),
