@@ -3,6 +3,9 @@ import { render } from 'react-dom';
 import './styles/styles.scss'
 import Party from '../components/Party.jsx'
 import MonsterDisplay from '../components/MonsterDisplay.jsx';
+import Tables from '../components/Tables';
+
+
 
 class App extends Component {
     constructor() {
@@ -15,90 +18,143 @@ class App extends Component {
             partyLevel: 0,
             numberOfMonsters: 0,
             partyThreshold: 0,
-            isPartySubmitted: false
+            isPartySubmitted: false,
+            monsterCR: 0,
         }
         //add any functions that need to be boudn here
         this.submitPartyInfo = this.submitPartyInfo.bind(this);
         this.updateFetchedMonsters = this.updateFetchedMonsters.bind(this);
     }
 
+    determineMonsterCR(numberOfM, partyThreshold) {
+        const avgMonsterXP = (partyThreshold / Tables.monsterModifier[numberOfM]) / numberOfM;
+        const arrOfXP = Object.keys(Tables.xpToCR);
+        let avgMonsterCR;
+        if (avgMonsterXP <= 0) avgMonsterCR = 0;
+        else {
+            for (let i = 0; i < arrOfXP.length; i++) {
+                if (arrOfXP[i] > avgMonsterXP) {
+                    avgMonsterCR = Tables.xpToCR[arrOfXP[i - 1]];
+                    break;
+                }
+            }
+        }
+        return avgMonsterCR;
 
+    }
 
 
     submitPartyInfo(partySize, partyLevel, difficultyLevel) {
-        const difficultyChart = {
-            easy: 0,
-            medium: 1,
-            hard: 2,
-            deadly: 3
-        }
-        const xpThreshold = {
-            1: [25, 50, 75, 100],
-            2: [50, 100, 150, 200],
-            3: [75, 150, 225, 400],
-            4: [125, 250, 375, 500],
-            5: [250, 500, 750, 1100],
-            6: [300, 600, 900, 1400],
-            7: [350, 750, 1100, 1700],
-            8: [450, 900, 1400, 2100],
-            9: [550, 1100, 1600, 2400],
-            10: [600, 1200, 1900, 2800],
-            11: [800, 1600, 2400, 3600],
-            12: [1000, 2000, 3000, 4500],
-            13: [1100, 2200, 3400, 5100],
-            14: [1250, 2500, 3800, 5700],
-            15: [1400, 2800, 4300, 6400],
-            16: [1600, 3200, 4800, 7200],
-            17: [2000, 3900, 5900, 8800],
-            18: [2100, 4200, 6300, 9500],
-            19: [2400, 4900, 7300, 10900],
-            20: [2800, 5700, 8500, 12700]
-        }
-        const difficultyMultiplier = difficultyChart[difficultyLevel];
-        const partyThreshold = xpThreshold[partyLevel][difficultyMultiplier] * partySize;
+        console.log(Tables.difficultyChart)
+        const difficultyMultiplier = Tables.difficultyChart[difficultyLevel];
+        const partyThreshold = Tables.xpThreshold[partyLevel][difficultyMultiplier] * partySize;
+        const numberOfMonsters = difficultyMultiplier + 2;
+        const monsterCR = this.determineMonsterCR(numberOfMonsters, partyThreshold);
         const newState = {
             ...this.state,
             partyNumber: partySize,
             partyLevel: partyLevel,
-            numberOfMonsters: difficultyMultiplier + 2,
+            numberOfMonsters: numberOfMonsters,
             partyThreshold: partyThreshold,
-            isPartySubmitted: true
+            isPartySubmitted: true,
+            monsterCR: monsterCR
         }
         console.log(newState);
         return this.setState(newState);
     }
 
-    updateFetchedMonsters(monsterEntries) {
+    async updateFetchedMonsters(monsterEntries) {
+        console.log("HUZZAH" + monsterEntries.results.length);
+        let numberOfMonsters = this.state.numberOfMonsters;
+        let selections = [];
+        //console.log(numberOfMonsters);
+        if (monsterEntries.results.length > numberOfMonsters) {
+            for (let i = 0; i < numberOfMonsters; i++) {
+                let randomNum = Math.floor(Math.random() * monsterEntries.results.length);
+                if (selections.indexOf(randomNum) > -1) {
+                    while (selections.indexOf(randomNum) >= 0) {
+                        randomNum = Math.floor(Math.random() * monsterEntries.results.length);
+                    }
+                }
+                selections.push(randomNum);
+            }
+        } else if (monsterEntries.results.length === numberOfMonsters) {
+            for (let i = 0; i < numberOfMonsters; i++) {
+                selections.push(i);
+            }
+        } else if (monsterEntries.results.length < numberOfMonsters) {
+            let count = 0;
+            for (let i = 0; i < numberOfMonsters; i++) {
+                if (count < monsterEntries.results.length) selections.push(++count);
+                if (count >= monsterEntries.results.length) count = 0;
+            }
+        }
+        console.log(selections);
+        const monsterArray = []
+        await selections.forEach(num => {
+            console.log('inside map function');
+            try {
+                fetch(`/api/moreInfo/${monsterEntries.results[num].index}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        //console.log(res);
+                        monsterArray.push(res);
+                        // console.log(monsterArray);
+                    });
+            }
+            catch { (err => console.log('Monster fetch ERROR: ', err)); }
+
+        })
+        return this.setState({
+            ...this.state,
+            fetchedMonsters: true,
+            totalMonsterEntries: [...monsterEntries.results],
+            selectedMonsters: [...monsterArray],
+        })
 
     }
 
+
+
+
+
+
     render() {
         if (this.state.isPartySubmitted && !this.state.fetchedMonsters) {
-            fetch(`/api/${this.state.partyThreshold}`, {
-                headers: { 'Content-Type': 'application/json' },
-            })
-                .then(res => res.json())
-                .then(res => {
-                    updateFetchedMonsters(res);
+            try {
+                fetch(`/api/${this.state.monsterCR}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
                 })
-                .catch(err => console.log('Monster fetch ERROR: ', err));
+                    .then(res => res.json())
+                    .then(res => {
+                        console.log(res);
+                        this.updateFetchedMonsters(res)
+                    });
+            }
+            catch { (err => console.log('Monster fetch ERROR: ', err)); }
         }
 
         return (
 
-            <div className='party-form'>
+            <div className='party-form' >
                 {!this.state.isPartySubmitted && (
                     <Party
                         submitPartyInfo={this.submitPartyInfo}
                     />
                 )}
 
-                {this.state.isPartySubmitted && (
-                    <MonsterDisplay
-                        updateFetchedMonsters={this.updateFetchedMonsters}
-                    />
-                )}
-            </div>
+                {
+                    this.state.fetchedMonsters && (
+                        <MonsterDisplay
+                            monsterArray={this.selectedMonsters}
+                        />
+                    )
+                }
+            </div >
 
         )
     }
