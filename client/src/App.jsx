@@ -91,33 +91,38 @@ class App extends Component {
         }
         console.log(selections);
         const monsterArray = []
-        await selections.forEach(num => {
-            console.log('inside map function');
-            try {
-                fetch(`/api/moreInfo/${monsterEntries.results[num].index}`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        //console.log(res);
-                        monsterArray.push(res);
-                        // console.log(monsterArray);
-                    });
-            }
-            catch { (err => console.log('Monster fetch ERROR: ', err)); }
 
+        selections.forEach(num => {
+            console.log('inside forEach function');
+            fetch(`/api/moreInfo/${monsterEntries.results[num].index}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            })
+                .then((res) => res.json())
+                .then(res => {
+                    monsterArray.push(res)
+                    return monsterArray;
+                })
+            //     .catch { (err => console.log('Monster fetch ERROR: ', err)); }
+            // console.log(monsterArray);
         })
-        return this.setState({
+        console.log('done with forEach');
+        console.log(monsterArray);
+
+        const newState = {
             ...this.state,
             fetchedMonsters: true,
+            selectedMonsters: monsterArray,
             totalMonsterEntries: [...monsterEntries.results],
-            selectedMonsters: [...monsterArray],
-        })
+        }
+        console.log('newstate: ', newState);
+        return this.setState(newState);
 
     }
 
+    async fetchMoreInfo(selections, allMonsters) {
 
+    }
 
 
 
@@ -137,7 +142,7 @@ class App extends Component {
             }
             catch { (err => console.log('Monster fetch ERROR: ', err)); }
         }
-
+        console.log(this.state);
         return (
 
             <div className='party-form' >
@@ -147,12 +152,12 @@ class App extends Component {
                     />
                 )}
 
-                {
-                    this.state.fetchedMonsters && (
-                        <MonsterDisplay
-                            monsterArray={this.selectedMonsters}
-                        />
-                    )
+                {this.state.fetchedMonsters && (
+
+                    < MonsterDisplay
+                        monsterArray={this.state.selectedMonsters}
+                    />
+                )
                 }
             </div >
 
