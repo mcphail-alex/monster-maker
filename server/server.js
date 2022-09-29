@@ -4,10 +4,11 @@ const path = require('path');
 const cookieController = require('./controllers/cookieController.js');
 const PORT = 3000;
 const apiRouter = require('./routes/api.js')
-
+const cookieParser = require('cookie-parser');
 
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/build', express.static(path.join(__dirname, '../build')));
 // route handler to respond with main app

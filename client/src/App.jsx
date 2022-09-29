@@ -43,6 +43,23 @@ class App extends Component {
 
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        console.log('component DID update');
+        if (this.state !== prevState) {
+            try {
+                fetch(`/api/saveUserState/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...this.state })
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        console.log('updated state on db');
+                    })
+            }
+            catch (err) { (err => console.log('db state update error: ', err)); }
+        }
+    }
 
     submitPartyInfo(partySize, partyLevel, difficultyLevel) {
         console.log(Tables.difficultyChart)
@@ -144,17 +161,37 @@ class App extends Component {
     // console.log('newstate: ', newState);
     // return this.setState(newState);
 
-
-
-    async fetchMoreInfo(selections, allMonsters) {
-
+    checkForCookie() {
+        console.log('hello from checkForCookie');
+        let cookieArr = document.cookie.split(';');
+        console.log(cookieArr);
+        for (const item of cookieArr) {
+            if (item.startsWith('id=')) return item.substring(3);
+        }
+        return null;
     }
 
-
-
-
     render() {
-        if (this.state.isPartySubmitted && !this.state.fetchedMonsters) {
+        //check to see if nothing has been submitted
+        //this will tell is a brand new load and we should check for
+        //a cookie ID
+        if (!this.state.isPartySubmitted && !this.state.fetchedMonsters) {
+            let cookieID = this.checkForCookie();
+            //console.log(cookieID);
+            try {
+                fetch(`/api/getUserState/${cookieID}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        this.setState({
+                            ...res.userState
+                        })
+                    });
+            }
+            catch { (err => console.log('UserState fetch ERROR: ', err)); }
+        } else if (this.state.isPartySubmitted && !this.state.fetchedMonsters) {
             try {
                 fetch(`/api/${this.state.monsterCR}`, {
                     method: 'GET',
@@ -168,7 +205,7 @@ class App extends Component {
             }
             catch { (err => console.log('Monster fetch ERROR: ', err)); }
         }
-        console.log(this.state);
+        //console.log(this.state);
         return (
 
             <div className='party-form' >
