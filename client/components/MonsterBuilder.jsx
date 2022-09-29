@@ -14,10 +14,6 @@ class MonsterBuilder extends Component {
         this.handleDamageClick = this.handleDamageClick.bind(this);
     }
 
-    addDamage() {
-
-    }
-
     renderTextObj(obj) {
         let result = '';
         for (let el in obj) {
@@ -36,18 +32,43 @@ class MonsterBuilder extends Component {
         return result.slice(0, result.length - 2);
     }
 
-
+    parsingAttacks(arr) {
+        let resultArr = [];
+        for (let i = 0; i < arr.length; i++) {
+            resultArr.push(
+                <div className='attackPopup'>
+                    <h5>{arr[i].name}</h5>
+                    <p>{JSON.stringify(arr[i])}</p>
+                    {/* <h6>{arr[i].name}</h6>
+                    <p><small>{arr[i].desc}</small></p>
+                    <ul>
+                        <li>Attack Bonus: {`${arr[i].attack_bonus}`}</li>
+                        <li>{`${JSON.stringify(arr[i])}`}</li>
+                    </ul> */}
+                </div>)
+        }
+        return resultArr;
+    }
 
     handleDamageClick() {
         console.log('Hello from handle damage click');
         console.log(this.state);
         let prevHP = this.state.monsterTotalHP;
         let prevDamage = this.state.monsterTotalHP;
-        this.setState({
-            ...this.state,
-            monsterTotalHP: --prevHP,
-            monsterDamage: ++prevDamage
-        })
+        if (prevHP > 1) {
+            this.setState({
+                ...this.state,
+                monsterTotalHP: --prevHP,
+                monsterDamage: ++prevDamage
+            })
+        } else if (prevHP === 1) {
+            this.setState({
+                ...this.state,
+                monsterTotalHP: 'DEAD',
+                monsterDamage: ++prevDamage
+            })
+        }
+
     }
 
     async componentDidMount() {
@@ -68,7 +89,7 @@ class MonsterBuilder extends Component {
 
 
         return (
-            <article className='monster-card'>
+            <article className='monster-card' style={{ backgroundColor: this.state.monsterTotalHP !== 'DEAD' ? '#fcc7aa' : '#880808' }}>
                 <div className='monster header'>
                     <h4 className='monster name'>{this.props.monsterInfo.name}</h4>
                 </div>
@@ -78,7 +99,6 @@ class MonsterBuilder extends Component {
                     <li className='monsterDetails'>HP: {this.props.monsterInfo.hit_points}</li>
                     <li className='monsterDetails'>Speed: <small>{this.renderTextObj(this.props.monsterInfo.speed)}</small></li>
                 </ul>
-                <hr />
                 <ul className='monsterStatsList'>
                     <h5 className='monsterStatsHeader'>Stats</h5>
                     <li className='monsterStats'>Strength: {this.props.monsterInfo.strength}</li>
@@ -87,7 +107,6 @@ class MonsterBuilder extends Component {
                     <li className='monsterStats'>Wisdom: {this.props.monsterInfo.wisdom}</li>
                     <li className='monsterStats'>Charisma: {this.props.monsterInfo.charisma}</li>
                 </ul>
-                <hr />
                 <section className='monsterFightInfo'>
                     <h5 className='monsterFightInfoHeader'>FightStats</h5>
                     <Popup
@@ -135,13 +154,13 @@ class MonsterBuilder extends Component {
                         trigger={open => (
                             <button className="button">ATTACKS!</button>
                         )}
-                        position="right center"
+                        position="bottom center"
                         closeOnDocumentClick
                     >
-                        <span> Popup content </span>
+                        <span> {this.parsingAttacks(this.props.monsterInfo.actions)} </span>
                     </Popup>
                 </section>
-                <section>
+                <section className='damageTracker'>
                     <h5>Damage Tracker</h5>
                     <button className='damageButton' onClick={this.handleDamageClick}>Add Damaage</button>
                     <h5>Total HP Left :</h5>

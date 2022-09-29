@@ -8,6 +8,7 @@ $dark: #4c4741;
 
 $darkgreen: #436742;
 $lightgreen : #6a8f70;
+$darkred: #660505;
 
 html {
     background-color: $darkgreen;
@@ -57,4 +58,33 @@ html {
     font-family: 'Cabin', sans-serif;
     // border-radius: 5px;
     // box-shadow: 2px 2px 2px 2px $superLightColor
+}
+
+.attackPopup {
+    max-width: 250px;
+    background-color: $white;
+    color: $dark;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 2px $superLightColor
+}
+
+.attackPopup>ul {
+    font-size: 8px;
+    margin: 0;
+}
+
+.attackPopup>p {
+    font-size: 8px;
+    line-height: normal;
+}
+
+h4,
+h5,
+h6 {
+    margin: 0;
+    padding: 0;
+}
+
+.damageTracker {
+    margin-top: 30px;
 }
