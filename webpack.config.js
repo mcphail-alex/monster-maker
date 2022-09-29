@@ -1,14 +1,15 @@
-const path = require('path')
+//const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
 
 module.exports = {
     entry: {
-        main: path.resolve(__dirname, './client/src/index.js'),
+        main: '/Users/mcphail.alex/codesmith/53/Solo Project/Solo-project/client/src/index.js',
     },
     output: {
-        path: path.resolve(__dirname, './build'),
+        path: '/Users/mcphail.alex/codesmith/53/Solo Project/Solo-project/build',
         filename: 'bundle.js',
     },
     mode: process.env.NODE_ENV,
@@ -16,7 +17,7 @@ module.exports = {
         host: 'localhost',
         port: 8080,
         static: {
-            directory: path.resolve(__dirname, 'build'),
+            directory: '/Users/mcphail.alex/codesmith/53/Solo Project/Solo-project/build',
             publicPath: '/'
         },
         hot: true,
@@ -60,10 +61,23 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             title: 'webpack Boilerplate',
-            template: path.resolve(__dirname, './client/template.html'), // template file
+            template: '/Users/mcphail.alex/codesmith/53/Solo Project/Solo-project/client/template.html', // template file
             filename: 'index.html', // output file
         }),
         new CleanWebpackPlugin(),
         new webpack.HotModuleReplacementPlugin(),
+        new NodePolyfillPlugin()
     ],
+    node: {
+        //fs: "empty",
+        //net: "empty",
+        global: false,
+        __filename: false,
+        __dirname: false
+    },
+    resolve: {
+        fallback: {
+            fs: false
+        }
+    }
 }
