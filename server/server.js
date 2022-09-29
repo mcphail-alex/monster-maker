@@ -1,18 +1,21 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const cookieController = require('./controllers/cookieController.js');
 const PORT = 3000;
 const apiRouter = require('./routes/api.js')
+
 
 
 app.use(express.json());
 
 app.use('/build', express.static(path.join(__dirname, '../build')));
 // route handler to respond with main app
-app.get("/", (req, res) => {
-    //console.log(path.join(__dirname + "../client/template.html"));
-    return res.status(200).sendFile(path.join(__dirname, "../index.html")); ///Users/mcphail.alex / codesmith / 53 / Solo Project / Solo - project / client / template.html
-})
+app.get("/",
+    (req, res) => {
+        //console.log(path.join(__dirname + "../client/template.html"));
+        return res.status(200).sendFile(path.join(__dirname, "../index.html")); ///Users/mcphail.alex / codesmith / 53 / Solo Project / Solo - project / client / template.html
+    })
 
 // app.get('/api', (req, res) => {
 //     console.log('made it to the backend!!');
