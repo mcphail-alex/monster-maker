@@ -1,3 +1,19 @@
 html {
     background-color: aquamarine;
 }
+
+.infoPopUp {
+    border-style: solid;
+    border-color: black;
+    position: absolute;
+    height: 200px;
+    width: 200px;
+    background-color: blueviolet;
+}
+
+.monsterFightInfoButtons {
+    border-style: dashed;
+    border-color: crimson;
+    height: 50px;
+    width: 200px;
+}

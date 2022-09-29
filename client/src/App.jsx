@@ -89,36 +89,62 @@ class App extends Component {
                 if (count >= monsterEntries.results.length) count = 0;
             }
         }
+
         console.log(selections);
-        const monsterArray = []
-
-        selections.forEach(num => {
-            console.log('inside forEach function');
-            fetch(`/api/moreInfo/${monsterEntries.results[num].index}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-            })
-                .then((res) => res.json())
-                .then(res => {
-                    monsterArray.push(res)
-                    return monsterArray;
-                })
-            //     .catch { (err => console.log('Monster fetch ERROR: ', err)); }
-            // console.log(monsterArray);
-        })
-        console.log('done with forEach');
-        console.log(monsterArray);
-
-        const newState = {
-            ...this.state,
-            fetchedMonsters: true,
-            selectedMonsters: monsterArray,
-            totalMonsterEntries: [...monsterEntries.results],
+        console.log(monsterEntries.results[1].name);
+        let monsterNames = [];
+        for (let i = 0; i < selections.length; i++) {
+            monsterNames.push(monsterEntries.results[selections[i]].index);//`/api/moreInfo/${monsterNames}`
         }
-        console.log('newstate: ', newState);
-        return this.setState(newState);
-
+        console.log(monsterNames);
+        try {
+            fetch(`/api/moreInfo/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(monsterNames)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    console.log(res);
+                    return this.setState({
+                        ...this.state,
+                        fetchedMonsters: true,
+                        selectedMonsters: [...res],
+                        totalMonsterEntries: [...monsterEntries.results],
+                    })
+                });
+        }
+        catch { (err => console.log('Monster fetch ERROR: ', err)); }
     }
+    // console.log(selections);
+    // const monsterArray = []
+
+    // selections.forEach(num => {
+    //     console.log('inside forEach function');
+    //     fetch(`/api/moreInfo/${monsterEntries.results[num].index}`, {
+    //         method: 'GET',
+    //         headers: { 'Content-Type': 'application/json' },
+    //     })
+    //         .then((res) => res.json())
+    //         .then(res => {
+    //             monsterArray.push(res)
+    //         })
+    //     //     .catch { (err => console.log('Monster fetch ERROR: ', err)); }
+    //     // console.log(monsterArray);
+    // })
+    // console.log('done with forEach');
+    // console.log('monster array length: ', monsterArray.length);
+
+    // const newState = {
+    //     ...this.state,
+    //     fetchedMonsters: true,
+    //     selectedMonsters: monsterArray,
+    //     totalMonsterEntries: [...monsterEntries.results],
+    // }
+    // console.log('newstate: ', newState);
+    // return this.setState(newState);
+
+
 
     async fetchMoreInfo(selections, allMonsters) {
 
