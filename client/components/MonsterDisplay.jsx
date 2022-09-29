@@ -12,10 +12,9 @@ const MonsterDisplay = props => {
     console.log(monsters);
 
     return (
-        <>
-            <h4>RAAAR...THIS IS A TEST!</h4>
+        <div className='monsterGrid'>
             {monsters}
-        </>
+        </div>
     )
 }
 

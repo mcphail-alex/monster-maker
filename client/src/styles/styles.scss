@@ -1,3 +1,60 @@
+$color : black;
+$secondaryColor : lighten($color, 20%);
+$tertiaryColor : lighten($color, 50%);
+$superLightColor : lighten($color, 95%);
+$pink: #fcc7aa;
+$white : #fcf7f5;
+$dark: #4c4741;
+
+$darkgreen: #436742;
+$lightgreen : #6a8f70;
+
 html {
-    background-color: aquamarine;
+    background-color: $darkgreen;
+    font-family: 'Cinzel Decorative', cursive;
+}
+
+.monsterGrid {
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    /* display: flex;
+  flex-wrap: wrap; */
+    max-width: 1400px;
+}
+
+.monster-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border: 1px solid $superLightColor;
+    margin: 5px;
+    font-family: 'Cabin', sans-serif;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 2px $superLightColor
+}
+
+.monsterFightInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $pink;
+    border: 1px solid $superLightColor;
+    font-family: 'Cabin', sans-serif;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 2px $superLightColor
+}
+
+.popupContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $white;
+    border: 1px solid $superLightColor;
+    max-width: 150px;
+    font-size: small;
+    font-family: 'Cabin', sans-serif;
+    // border-radius: 5px;
+    // box-shadow: 2px 2px 2px 2px $superLightColor
 }

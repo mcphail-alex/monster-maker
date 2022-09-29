@@ -21,9 +21,19 @@ class MonsterBuilder extends Component {
     renderTextObj(obj) {
         let result = '';
         for (let el in obj) {
-            result += (el + ' : ' + obj[el] + ' || ');
+            result += (el + ': ' + obj[el] + ', ');
         }
-        return result
+        return result.slice(0, result.length - 3);
+    }
+
+    renderTextArray(arr) {
+        let result = '';
+        if (arr.length === 0) return 'NONE... that we know of'
+        for (let el of arr) {
+            if (typeof el === 'object') result += this.renderTextObj(el) + ', ';
+            else result += (el + ', ')
+        }
+        return result.slice(0, result.length - 2);
     }
 
 
@@ -58,7 +68,7 @@ class MonsterBuilder extends Component {
 
 
         return (
-            <article className='monster card'>
+            <article className='monster-card'>
                 <div className='monster header'>
                     <h4 className='monster name'>{this.props.monsterInfo.name}</h4>
                 </div>
@@ -85,17 +95,17 @@ class MonsterBuilder extends Component {
                         trigger={open => (
                             <button className="button">Vulnerabilities</button>
                         )}
-                        position="bottom right"
+                        position="right center"
                         closeOnDocumentClick
                     >
-                        <span> Popup content </span>
+                        <span className='popupContent'> {this.renderTextArray(this.props.monsterInfo.damage_vulnerabilities)} </span>
                     </Popup>
                     <Popup
                         className='resistancesButton'
                         trigger={open => (
                             <button className="button">Resistances</button>
                         )}
-                        position="bottom right"
+                        position="right center"
                         closeOnDocumentClick
                     >
                         <span> Popup content </span>
@@ -105,7 +115,7 @@ class MonsterBuilder extends Component {
                         trigger={open => (
                             <button className="button">Immunities</button>
                         )}
-                        position="bottom right"
+                        position="right center"
                         closeOnDocumentClick
                     >
                         <span> Popup content </span>
@@ -115,7 +125,7 @@ class MonsterBuilder extends Component {
                         trigger={open => (
                             <button className="button">Condition Immunities</button>
                         )}
-                        position="bottom right"
+                        position="right center"
                         closeOnDocumentClick
                     >
                         <span> Popup content </span>
@@ -125,7 +135,7 @@ class MonsterBuilder extends Component {
                         trigger={open => (
                             <button className="button">ATTACKS!</button>
                         )}
-                        position="bottom right"
+                        position="right center"
                         closeOnDocumentClick
                     >
                         <span> Popup content </span>
