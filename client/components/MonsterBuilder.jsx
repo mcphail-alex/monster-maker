@@ -1,6 +1,7 @@
 //import e from 'express';
 import React, { Component } from 'react';
 import Popup from 'reactjs-popup';
+
 //import InfoModal from './InfoModal.jsx';
 
 class MonsterBuilder extends Component {
@@ -9,7 +10,8 @@ class MonsterBuilder extends Component {
         this.state = {
             monsterDamage: 0,
             monsterTotalHP: 0,
-            initialized: false
+            initialized: false,
+
         }
         this.handleDamageClick = this.handleDamageClick.bind(this);
     }
@@ -89,7 +91,9 @@ class MonsterBuilder extends Component {
 
 
         return (
-            <article className='monster-card' style={{ backgroundColor: this.state.monsterTotalHP !== 'DEAD' ? '#fcc7aa' : '#880808' }}>
+
+            <article className='monster-card' style={{ backgroundColor: this.state.monsterTotalHP !== 'DEAD' ? '#c8c4bf' : '#880808' }}>
+
                 <div className='monster header'>
                     <h4 className='monster name'>{this.props.monsterInfo.name}</h4>
                 </div>
@@ -98,16 +102,13 @@ class MonsterBuilder extends Component {
                     <li className='monsterDetails'>AC: {this.props.monsterInfo.armor_class}</li>
                     <li className='monsterDetails'>HP: {this.props.monsterInfo.hit_points}</li>
                     <li className='monsterDetails'>Speed: <small>{this.renderTextObj(this.props.monsterInfo.speed)}</small></li>
-                </ul>
-                <ul className='monsterStatsList'>
-                    <h5 className='monsterStatsHeader'>Stats</h5>
                     <li className='monsterStats'>Strength: {this.props.monsterInfo.strength}</li>
                     <li className='monsterStats'>Dexterity: {this.props.monsterInfo.dexterity}</li>
                     <li className='monsterStats'>Constitution: {this.props.monsterInfo.constitution}</li>
                     <li className='monsterStats'>Wisdom: {this.props.monsterInfo.wisdom}</li>
                     <li className='monsterStats'>Charisma: {this.props.monsterInfo.charisma}</li>
                 </ul>
-                <section className='monsterFightInfo'>
+                <section className='monsterFightInfo' style={{ backgroundColor: this.state.monsterTotalHP !== 'DEAD' ? '#c8c4bf' : '#880808' }}>
                     <h5 className='monsterFightInfoHeader'>FightStats</h5>
                     <Popup
                         className='vulnerabilitiesButton'
@@ -162,7 +163,7 @@ class MonsterBuilder extends Component {
                 </section>
                 <section className='damageTracker'>
                     <h5>Damage Tracker</h5>
-                    <button className='damageButton' onClick={this.handleDamageClick}>Add Damaage</button>
+                    <button className='damageButton' onClick={this.handleDamageClick}>Take Damaage</button>
                     <h5>Total HP Left :</h5>
                     <div className='damageCounter' style={{ borderStyle: 'solid', borderColor: 'black' }}>{this.state.monsterTotalHP}</div>
 

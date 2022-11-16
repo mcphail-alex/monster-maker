@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Malakili from '../components/images/Malakili-looking.jpeg';
 
 const Party = props => {
 
@@ -23,32 +23,34 @@ const Party = props => {
     return (
         <div>
             <h2>Tell me about your party...</h2>
-            {/* <img src="https://static.wikia.nocookie.net/star-wars-legends/images/e/ec/Malakili_SWCT.png/revision/latest/scale-to-width-down/250?cb=20190205064222" alt='Malakili' className='flavor-Malakili'></img> */}
+            {/* <img src={Malakili} alt='Malakili' className='flavor-Malakili'></img> */}
 
-            <form onSubmit={handleSubmit}>
-                <label htmlFor='partySize' >How many adventurers in your party?:</label>
-                <input id='partySize' type='number' name='partySize' min='1' max='20' />
-                <label htmlFor='partyLevel' >What level are they?:</label>
-                <input id='partyLevel' type='number' name='partyLevel' min='1' max='20' />
-                <fieldset>
+            <form className='partyForm' onSubmit={handleSubmit}>
+                <div className='numberInputs'>
+                    <label className='numberInput' htmlFor='partySize' >How many adventurers in your party?:</label>
+                    <input className='numberInput' id='partySize' type='number' name='partySize' min='1' max='20' />
+                    <label className='numberInput' htmlFor='partyLevel' >What level are they?:</label>
+                    <input className='numberInput' id='partyLevel' type='number' name='partyLevel' min='1' max='20' />
+                </div>
+                <fieldset className='radioButtons'>
                     <legend>How are you feeling about them today?</legend>
 
-                    <div>
+                    <div className='radioButton'>
                         <input type="radio" id="easy" name="difficultyLevel" value="easy"
                         />
                         <label htmlFor="easy">We're all just having fun...</label>
                     </div>
 
-                    <div>
+                    <div className='radioButton'>
                         <input type="radio" id="medium" name="difficultyLevel" value="medium" />
                         <label htmlFor="medium">Let's see what they got...</label>
                     </div>
 
-                    <div>
+                    <div className='radioButton'>
                         <input type="radio" id="hard" name="difficultyLevel" value="hard" />
-                        <label htmlFor="hard">Stop making jokes, Devin...</label>
+                        <label htmlFor="hard">Stop making stupid jokes, Devin...</label>
                     </div>
-                    <div>
+                    <div className='radioButton'>
                         <input type="radio" id="deadly" name="difficultyLevel" value="deadly" />
                         <label htmlFor="dealy">Cry HAVOC, and realease the dogs of WAR!</label>
                     </div>
