@@ -38,6 +38,13 @@ router.post('/saveUserState',
         return res.status(200).send(res.locals.monsterDataArray);
     })
 
+router.delete('/clearBoard/:cookieID', 
+    userController.deleteUserEntry,
+    cookieController.deleteCookie,
+    (req, res) => {
+    return res.status(200).send(res.locals.deletedEntry);
+})
+
 
 
 module.exports = router;

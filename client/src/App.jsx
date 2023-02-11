@@ -24,6 +24,53 @@ class App extends Component {
         //add any functions that need to be boudn here
         this.submitPartyInfo = this.submitPartyInfo.bind(this);
         this.updateFetchedMonsters = this.updateFetchedMonsters.bind(this);
+        this.clearBoard = this.clearBoard.bind(this);
+    }
+
+    clearBoard(){
+        //send a fetch request to backend to /api/clear endpoint
+        //this will reset the state to empty in the database and return the new, default state
+        const cookieID = this.checkForCookie();
+        try {
+            fetch(`/api/clearBoard/${cookieID}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+            })
+                .then(res => res.json())
+                .then(res => {
+                    console.log('deleted db entry', res);
+                    const newState = {
+                        fetchedMonsters: false,
+                        totalMonsterEntries: [],
+                        selectedMonsters: [],
+                        partyNumber: 0,
+                        partyLevel: 0,
+                        numberOfMonsters: 0,
+                        partyThreshold: 0,
+                        isPartySubmitted: false,
+                        monsterCR: 0,
+                    }
+                    
+                    
+                    this.setState(newState);
+                    window.location.reload();
+                })
+        }
+        catch (err) { (err => console.log('error resetting: ', err)); }
+
+        //NOPE... all I need to do is reset state to default, and then it will update in db 
+        // const newState = {
+        //     fetchedMonsters: false,
+        //     totalMonsterEntries: [],
+        //     selectedMonsters: [],
+        //     partyNumber: 0,
+        //     partyLevel: 0,
+        //     numberOfMonsters: 0,
+        //     partyThreshold: 0,
+        //     isPartySubmitted: false,
+        //     monsterCR: 0,
+        // }
+        // this.setState(newState);
     }
 
     determineMonsterCR(numberOfM, partyThreshold) {
@@ -62,7 +109,7 @@ class App extends Component {
     }
 
     submitPartyInfo(partySize, partyLevel, difficultyLevel) {
-        console.log(Tables.difficultyChart)
+        //console.log(Tables.difficultyChart)
         const difficultyMultiplier = Tables.difficultyChart[difficultyLevel];
         const partyThreshold = Tables.xpThreshold[partyLevel][difficultyMultiplier] * partySize;
         const numberOfMonsters = difficultyMultiplier + 2;
@@ -177,20 +224,22 @@ class App extends Component {
         //a cookie ID
         if (!this.state.isPartySubmitted && !this.state.fetchedMonsters) {
             let cookieID = this.checkForCookie();
-            //console.log(cookieID);
-            try {
-                fetch(`/api/getUserState/${cookieID}`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        this.setState({
-                            ...res.userState
-                        })
-                    });
+            console.log('cookie id: ',cookieID);
+            if(cookieID){
+                try {
+                    fetch(`/api/getUserState/${cookieID}`, {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' },
+                     })
+                        .then(res => res.json())
+                        .then(res => {
+                                this.setState({
+                                ...res.userState
+                            })
+                        });
+                }
+                catch { (err => console.log('UserState fetch ERROR: ', err)); }
             }
-            catch { (err => console.log('UserState fetch ERROR: ', err)); }
         } else if (this.state.isPartySubmitted && !this.state.fetchedMonsters) {
             try {
                 fetch(`/api/${this.state.monsterCR}`, {
@@ -219,6 +268,7 @@ class App extends Component {
 
                     < MonsterDisplay
                         monsterArray={this.state.selectedMonsters}
+                        clearBoard={this.clearBoard}
                     />
                 )
                 }

@@ -3,6 +3,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
+const path = require('path');
+const dotenv = require('dotenv').config({
+    path: path.join(__dirname, '.env')
+});
 
 module.exports = {
     entry: {
@@ -75,7 +79,10 @@ module.exports = {
         }),
         new CleanWebpackPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new NodePolyfillPlugin()
+        new NodePolyfillPlugin(),
+        new webpack.DefinePlugin({
+            "process.env" : dotenv.parsed
+        }),
     ],
     node: {
         //fs: "empty",

@@ -16,6 +16,7 @@ const Party = props => {
         // console.log(difficultyLevel);
         // const difficultyLevel = document.querySelector('difficulty-level');
         // console.log(difficultyLevel);
+        console.log('SUBMIT')
         console.log(e.target.partySize.value, e.target.partyLevel.value, e.target.difficultyLevel.value);
         props.submitPartyInfo(e.target.partySize.value, e.target.partyLevel.value, e.target.difficultyLevel.value);
     }
@@ -52,7 +53,7 @@ const Party = props => {
                     </div>
                     <div className='radioButton'>
                         <input type="radio" id="deadly" name="difficultyLevel" value="deadly" />
-                        <label htmlFor="dealy">Cry HAVOC, and realease the dogs of WAR!</label>
+                        <label htmlFor="deadly">Cry HAVOC, and realease the dogs of WAR!</label>
                     </div>
                 </fieldset>
                 <button type='submit'>submit</button>
