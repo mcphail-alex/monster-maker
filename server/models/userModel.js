@@ -5,7 +5,7 @@ const { DB_URI } = envVariables;
 console.log(DB_URI);
 
 mongoose
-    .connect('mongodb+srv://admin:root@cluster0.taroxn5.mongodb.net/?retryWrites=true&w=majority', {
+    .connect('', {//insert uri here
         // options for the connect method to parse the URI
         useNewUrlParser: true,
         useUnifiedTopology: true,
