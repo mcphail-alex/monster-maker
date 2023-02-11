@@ -11,6 +11,13 @@ cookieController.setCookie = (req, res, next) => {
     next();
 }
 
+cookieController.deleteCookie = (req, res, next) => {
+    console.log('hello from delete cookie');
+    console.log(req.cookies);
+    res.clearCookie('id');
+    next();
+}
+
 
 
 

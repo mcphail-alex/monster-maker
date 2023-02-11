@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
-
-const MONGO_URI = //enter string here
+const envVariables = process.env;
+console.log('env: ', envVariables);
+const { DB_URI } = envVariables;
+console.log(DB_URI);
 
 mongoose
-    .connect(MONGO_URI, {
+    .connect('mongodb+srv://admin:root@cluster0.taroxn5.mongodb.net/?retryWrites=true&w=majority', {
         // options for the connect method to parse the URI
         useNewUrlParser: true,
         useUnifiedTopology: true,

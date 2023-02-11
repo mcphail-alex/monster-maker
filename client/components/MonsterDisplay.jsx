@@ -3,7 +3,7 @@ import MonsterBuilder from './MonsterBuilder.jsx';
 
 const MonsterDisplay = props => {
     console.log('hellow from monster display!');
-    const { monsterArray } = props;
+    const { monsterArray, clearBoard } = props;
     console.log(monsterArray.length);
     let monsters = [];
     for (let i = 0; i < props.monsterArray.length; i++) {
@@ -12,9 +12,12 @@ const MonsterDisplay = props => {
     console.log(monsters);
 
     return (
-        <div className='monsterGrid'>
-            {monsters}
-        </div>
+        <>
+            <div className='monsterGrid'>
+                 {monsters}
+            </div>
+            <button class='clearBoard' onClick={clearBoard}>Clear this encounter</button>
+        </>
     )
 }
 

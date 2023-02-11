@@ -12,12 +12,18 @@ userController.createUser = async (req, res, next) => {
             userState: { set: false }
         })
         await newUser.save();
+    }else{
+        const newUser = new userDB({
+            cookieId: req.cookies.id,
+            userState: { set: false }
+        })
+        await newUser.save();
     }
     return next();
 }
 
 userController.saveUserState = (req, res, next) => {
-    // console.log('made it to the saveuser state');
+    console.log('made it to the saveuser state');
     // console.log(req.cookies.id);
     userDB.updateOne({ cookieId: req.cookies.id }, { userState: req.body }, (err, res) => {
         //console.log(res.nModified);
@@ -38,5 +44,29 @@ userController.getUserState = (req, res, next) => {
     })
 }
 
+userController.deleteUserEntry = (req, res, next) => {
+    // console.log('made it to delete user');
+    // const newState = {
+    //     fetchedMonsters: false,
+    //         totalMonsterEntries: [],
+    //         selectedMonsters: [],
+    //         partyNumber: 0,
+    //         partyLevel: 0,
+    //         numberOfMonsters: 0,
+    //         partyThreshold: 0,
+    //         isPartySubmitted: false,
+    //         monsterCR: 0,
+    // }
+    const {cookieID} = req.params;
+    console.log(cookieID)
+    userDB.findOneAndDelete({cookieId: cookieID}, (err, result) => {
+        if(err){
+            next(err);
+        }else{ 
+            res.locals.deletedEntry = result;
+        }
+        next();
+    })
+}
 
 module.exports = userController;
