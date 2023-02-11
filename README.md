@@ -1,2 +1,3 @@
 # Solo-project
-The repo for my Codesmith solo project.  A resource for DND DM's.
+
+The repo for my Monster Maker project. A resource for DND DM's.
